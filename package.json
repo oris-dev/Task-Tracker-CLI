@@ -1,0 +1,11 @@
+{
+  "name": "task-tracker-cli",
+  "version": "1.0.0",
+  "description": "a task tracker cli project - basic backend studying",
+  "main": "task-cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ori Sadowsky",
+  "license": "ISC"
+}
