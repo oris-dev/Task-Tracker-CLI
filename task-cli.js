@@ -2,6 +2,7 @@
 const { create } = require('domain');
 const fs = require('fs');
 let id = 1;
+const maxDescLength = 100;
 
 cliConvos();
 
@@ -22,10 +23,7 @@ function cliConvos() {
                     return value;
             });
 
-            if (description.length === 0) {
-                console.log('invalid description');
-                break;
-            }
+            testLength(description, maxDescLength);
 
             // changes the description
           
@@ -44,6 +42,7 @@ function cliConvos() {
         //usage: delete <id>
         case 'delete':
             console.log('delete');
+
             break;
 
 
@@ -70,4 +69,15 @@ function cliConvos() {
         return { id: id++, description: desc, status: 'to-do', createdAt: now, updatedAt: now};
     }
 
+    function testLength(variable, maxLength){
+        if(variable.length === 0 || variable.length > maxLength){
+            console.log(`Please enter a string between 0 chars and ${maxLength} chars`);
+        }
+    }
+
+ 
 }
+
+
+export {createTask}; 
+
