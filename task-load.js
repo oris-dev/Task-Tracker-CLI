@@ -2,21 +2,24 @@ import fs from "fs";
 const jsonPath = "./tasks.json";
 
 // loads all the tasks from the JSON. Changing them into Objects
-
+// if there is no tasks file, create a new empty one 
 async function loadTasks() {
 
-    // making sure the file exists
-    if (fileExists(path)) {
-        const rawData = await fs.promises.readFile(jsonPath, 'utf-8');
-        const data = JSON.parse(rawData);
-
-        return data;
+    try {
+        // making sure the file exists 
+        if (fileExists(jsonPath)) {
+            const rawData = await fs.promises.readFile(jsonPath, 'utf-8');
+            const data = JSON.parse(rawData);
+            return data;
+        }
+    } catch (e) {
+        //if the file does not exist return an empty array 
+        // and create a new file 
+        fs.promises.writeFile(jsonPath, '{}', err => {
+            err ? Console.log("Tasks JSON file has been created succsessfully ") : console.log("Unable to create the tasks JSON file", err);
+        })
+        return [];
     }
-
-
-    //if the file does not exist return an empty array
-    return [];
-
 }
 
 // takes the updated JSON Tasks and puts it in the file 
@@ -46,4 +49,26 @@ async function fileExists(path) {
     }
 }
 
-export { updateTasks, loadTasks };
+// a helper function for finding max ID when creating a new task
+async function getMaxID() {
+
+    const tasksData = loadTasks(); // returns a js object of all the tasks
+
+    if (tasksData.length === 0) return 0; // if the file is empty, there is not IDs
+    if (tasksData.length === 1) return tasksData[0].id; //if theres one value, then its the max ID
+
+
+    let maxID = tasksData[0].id;
+
+    // look in the array and find the max id
+    for (let i = 1; i < tasksData.length; i++) {
+
+        if (tasksData[i].id > maxID) maxID = tasksData[i].id;
+    }
+
+    return maxID;
+}
+
+
+
+export { updateTasks, loadTasks, getMaxID };

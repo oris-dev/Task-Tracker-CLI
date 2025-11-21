@@ -1,6 +1,5 @@
-
-const { create } = require('domain');
-const fs = require('fs');
+import fs from "node:fs";
+import { loadTasks, updateTasks } from "./task-load.js";
 let id = 1;
 const maxDescLength = 100;
 
@@ -21,15 +20,19 @@ function cliConvos() {
             let description = process.argv.filter((value, index) => {
                 if (index > 2)
                     return value;
+
             });
 
-            testLength(description, maxDescLength);
+            if (testLength(description, maxDescLength)) {
+                // changes the description
+                description = description.join(' ');
+                console.log(createTask(description));
+            };
 
-            // changes the description
-          
+            console.log("Unvalid description")
 
-            description = description.join(' ');
-            console.log(createTask(description));
+
+
 
 
             break;
@@ -56,6 +59,12 @@ function cliConvos() {
             console.log('listByStatus');
             break;
 
+        case 'test':
+            const newTask = createTask("chomp chomp");
+            updateTasks(newTask);
+            break;
+
+
         default:
             console.log(new Error("Please enter a valid command"));
             break;
@@ -63,21 +72,23 @@ function cliConvos() {
 
     }
 
-    // status , createdAt , updatedAt
-    function createTask(desc) {
-        const now = new Date().toDateString();
-        return { id: id++, description: desc, status: 'to-do', createdAt: now, updatedAt: now};
-    }
+}
+function updateID() {
 
-    function testLength(variable, maxLength){
-        if(variable.length === 0 || variable.length > maxLength){
-            console.log(`Please enter a string between 0 chars and ${maxLength} chars`);
-        }
-    }
+}
 
- 
+// status , createdAt , updatedAt
+function createTask(desc) {
+    const now = new Date().toDateString();
+    return { id: id++, description: desc, status: 'to-do', createdAt: now, updatedAt: now };
+}
+
+function testLength(variable, maxLength) {
+    if (variable.length === 0 || variable.length > maxLength) {
+        console.log(`Please enter a string between 0 chars and ${maxLength} chars`);
+    }
 }
 
 
-export {createTask}; 
+export { createTask };
 

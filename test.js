@@ -1,4 +1,5 @@
 import { updateTasks,loadTasks } from "./task-load.js";
+import { createTask } from './task-cli.js';
 
 // sorta works but not really yet, It needs some more adjustments, it creates a new json file
 // but it doesn't change it properly or test what is already in the file. I need to 
@@ -18,7 +19,3 @@ test();
     updateTasks(newTask);
 }
 
-function createTask(desc) {
-    const now = new Date().toDateString();
-    return { id: 1, description: desc, status: 'to-do', createdAt: now, updatedAt: now };
-}
