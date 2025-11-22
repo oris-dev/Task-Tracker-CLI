@@ -15,7 +15,7 @@ async function loadTasks() {
     } catch (e) {
         //if the file does not exist return an empty array 
         // and create a new file 
-        fs.promises.writeFile(jsonPath, '{}', err => {
+        fs.promises.writeFile(jsonPath, '[]', err => {
             err ? Console.log("Tasks JSON file has been created succsessfully ") : console.log("Unable to create the tasks JSON file", err);
         })
         return [];
@@ -50,23 +50,18 @@ async function fileExists(path) {
 }
 
 // a helper function for finding max ID when creating a new task
+// must be async cause it needs to load all the tasks
 async function getMaxID() {
 
-    const tasksData = loadTasks(); // returns a js object of all the tasks
+    // create a new array of only the ids
+    const tasks = await loadTasks();
 
-    if (tasksData.length === 0) return 0; // if the file is empty, there is not IDs
-    if (tasksData.length === 1) return tasksData[0].id; //if theres one value, then its the max ID
+    if(tasks.length === 0) return 0;
 
-
-    let maxID = tasksData[0].id;
-
-    // look in the array and find the max id
-    for (let i = 1; i < tasksData.length; i++) {
-
-        if (tasksData[i].id > maxID) maxID = tasksData[i].id;
-    }
-
-    return maxID;
+    const ids = tasks.map(task => task.id);
+    // find the max value of all the ids
+    const max = Math.max(...ids);
+    return max;
 }
 
 

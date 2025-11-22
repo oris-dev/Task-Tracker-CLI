@@ -1,12 +1,12 @@
 import fs from "node:fs";
-import { loadTasks, updateTasks } from "./task-load.js";
+import {loadTasks,updateTasks, getMaxID} from "./task-load.js";
 let id = 1;
 const maxDescLength = 100;
 
 cliConvos();
 
 
-function cliConvos() {
+async function  cliConvos() {
 
     const funcWord = process.argv[2];
 
@@ -30,10 +30,6 @@ function cliConvos() {
             };
 
             console.log("Unvalid description")
-
-
-
-
 
             break;
 
@@ -60,7 +56,8 @@ function cliConvos() {
             break;
 
         case 'test':
-            const newTask = createTask("chomp chomp");
+            const maxID =  await getMaxID();
+            const newTask = createTask("chomp chomp", maxID+1);
             updateTasks(newTask);
             break;
 
@@ -73,14 +70,12 @@ function cliConvos() {
     }
 
 }
-function updateID() {
 
-}
 
 // status , createdAt , updatedAt
-function createTask(desc) {
+function createTask(desc, id) {
     const now = new Date().toDateString();
-    return { id: id++, description: desc, status: 'to-do', createdAt: now, updatedAt: now };
+    return { id: id, description: desc, status: 'to-do', createdAt: now, updatedAt: now };
 }
 
 function testLength(variable, maxLength) {
