@@ -28,10 +28,10 @@ async function updateTasks(changes) {
     // try to add the changes , if it does not work create a file in the same location
     try {
         const tasks = await loadTasks(); // returns an array of js objects 
-        console.log(tasks);
         tasks.push(changes);
         const tasksJSON = JSON.stringify(tasks, null, 2) // convert back to JSON
-        console.log(tasks);
+
+        //writeFile completely overrides the current state of the json file
         await fs.promises.writeFile(jsonPath, tasksJSON, "utf8");
     }
 
@@ -39,6 +39,8 @@ async function updateTasks(changes) {
         console.log(e);
     }
 }
+
+
 
 async function fileExists(path) {
     try {

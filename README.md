@@ -19,7 +19,7 @@ Task object: There will be an array of tasks with the needed information.
 -- Task Properties --
 1. id - unique identifier for the task
 2. description - self explanatory 
-3. status - should be on of the 3 ('todo','in-progress', 'done')
+3. status - should be on of the 3 ('to-do','in-progress', 'done')
 4. createdAt: date and time when created
 5. updatedAt: date and time when updated 
 
