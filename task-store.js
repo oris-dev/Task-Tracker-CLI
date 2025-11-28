@@ -25,10 +25,14 @@ export async function renameTask(id, newDescription) {
     let rawTasks = await loadTasks();
     //change the task with the specific id, I can use the id as an index cause it 
     // always tracks the amount of tasks there is
-    rawTasks[id].description = newDescription;
+    const index = rawTasks.findIndex(task => task.id === Number (id));
+
+    if(index === -1) throw Error(`The task with the id of ${id} doesn't exist`);
+
+    rawTasks[index].description = newDescription;
 
     const tasks = JSON.stringify(rawTasks, null, 2);
-    await fs.writeFile(jsonPath, updateTasks, "utf8");
+    await fs.writeFile(jsonPath, tasks, "utf8");
 }
 
 export async function list() {
@@ -52,7 +56,7 @@ export async function listByStatus(status) {
 
 
     tasks.forEach(task => {
-        if (task.status !== status) {
+        if (task.status === status) {
             console.log(`        Task ID: ${task.id}
         Task description: ${task.description}
         Task status: ${task.status}

@@ -47,10 +47,32 @@ async function cliConvos() {
         // usage: rename <id> <newname> - rename an existing task
         case 'rename':
 
-             if(!isDigits(process.argv[3])){
+            const renameID = process.argv[3];
+
+             let renameDescription = process.argv.filter((value, index) => {
+                if (index > 3)
+                    return value;
+
+            });
+
+             renameDescription = renameDescription.join(' ');
+
+            if(renameDescription === ""){
+                console.log("A task description must not be empty");
+                break;
+            }
+            
+             if(!isDigits(renameID)){
                console.log("Task ID must be only written in numbers");
                break;
             }
+
+            if(! (await taskExists(renameID))){
+                console.log("Task doesn't exist");
+                break;
+            }
+
+            task.renameTask(renameID, renameDescription);
             
             break;
 
@@ -96,10 +118,16 @@ async function cliConvos() {
 
         //usage: listByStatus <status> - lists all the items in the status mentioned
         case 'listByStatus':
-            const status = String(process.argv0[3]); // make sure the status is a string
-            
+            const status = process.argv[3]; // make sure the status is a string
+            const exists = await statusExists(status);
+
             if(!validateStatus(status)){
                 console.log("Please write a valid status: [1] to-do [2] in-progress [3] done");
+                break;
+            }
+
+            if(!exists){
+                console.log(`There are no tasks created with the status ${status}`);
                 break;
             }
 
@@ -141,11 +169,16 @@ function testLength(variable, maxLength) {
 async function taskExists(taskID) {
 
     const tasksArray = await loadTasks();
-    
-    if (tasksArray.some(task => task.id === taskID))
+
+    if (tasksArray.some(task => task.id === Number(taskID)))
         return true;
  
     return false;
+}
+
+async function statusExists(status){
+    const array = await loadTasks();
+    return (array.some(task => task.status === status));
 }
 
 function validateStatus(status){
