@@ -1,16 +1,19 @@
 {
-  "name": "task-tracker-cli",
+  "name": "task-tracker-web",
   "version": "1.0.0",
-  "description": "a task tracker cli project - basic backend studying",
-  "main": "task-cli.js",
+  "description": "a task tracker web project - basic backend studying continued",
+  "main": "index.mjs",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon ./server-files/index.mjs",
+    "start": "node ./server-files/index.mjs"
   },
   "author": "Ori Sadowsky",
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
+    "express-openapi": "^12.1.3",
     "nodemon": "^3.1.11"
   }
 }
