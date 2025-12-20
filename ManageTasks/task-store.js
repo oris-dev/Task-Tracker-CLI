@@ -4,8 +4,11 @@ import fs from "node:fs/promises";
 import { loadTasks, updateTasks, getMaxID } from "./task-load.js";
 const jsonPath = "./tasks.json";
 
-export function addTask(task) {
-    updateTasks(task);
+
+// ** Note for the future: add a new function the recoginzes the ids after a task was removed **
+
+export async function addTask(task) {
+    await updateTasks(task);
 }
 
 export async function deleteTask(id) {
