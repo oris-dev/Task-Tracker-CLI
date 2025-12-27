@@ -1,6 +1,6 @@
 import express from "express";
 import { loadTasks, getMaxID } from "../ManageTasks/task-load.js";
-import {addTask} from "../ManageTasks/task-store.js";
+import { addTask, renameTask, getTaskById } from "../ManageTasks/task-store.js";
 const app = express();
 const PORT = process.env.PORT || 3000; // grab the port value from nodejs or else defaults it into 3000
 
@@ -39,22 +39,33 @@ app.get("/api/tasks", async (req, res) => {
 //create a new task
 app.post("/api/tasks", async (req, res) => {
     const now = new Date().toDateString();
-    const newID = await getMaxID();
-    console.log(newID);
-    const newTask = { id: newID+1, description: req.body.description, status: "to-do", createdAt: now, updatedAt: now }
+    //  const newID = await getMaxID();
+    //console.log(newID);
+    const newTask = { id: await getMaxID() + 1, description: req.body.description, status: "to-do", createdAt: now, updatedAt: now }
     await addTask(newTask);
     return res.status(201).send(newTask);
 });
 
 // get task by ID
 
-app.get("/api/tasks:id", async (req, res) => {
+app.get("/api/tasks/:id", async (req, res) => {
     const parsedId = parseInt(req.params.id);
-    const tasks = await loadTasks();
     if (isNaN(parsedId)) return res.status(400).json({ error: "Bad Request(invalid id)" });
-    return res.json(tasks);
+    const task = await getTaskById(parsedId);
+    if(!task) return res.status(404).json( {error: "Task has not been found"})
+
+    return res.status(200).json(task);
 });
 
+
+// rename task by ID
+app.patch("/api/tasks/:id", async (req, res) => {
+    const parsedId = parseInt(req.params.id);
+    const description = req.body.description;
+    if (isNaN(parsedId)) return res.status(400).json({ error: "Bad Request(invalid id)" });
+    await renameTask(parsedId, description);
+    return res.status(200).json({message: `Task with the id of ${parsedId} was uppdated`});
+});
 
 
 

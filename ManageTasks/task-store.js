@@ -31,8 +31,10 @@ export async function renameTask(id, newDescription) {
     const index = rawTasks.findIndex(task => task.id === Number (id));
 
     if(index === -1) throw Error(`The task with the id of ${id} doesn't exist`);
+    const now = new Date().toDateString();
 
     rawTasks[index].description = newDescription;
+    rawTasks[index].updatedAt = now;
 
     const tasks = JSON.stringify(rawTasks, null, 2);
     await fs.writeFile(jsonPath, tasks, "utf8");
@@ -67,6 +69,15 @@ export async function listByStatus(status) {
         }
 
     });
+}
+
+
+export async function getTaskById(id){
+    const parsedId = parseInt(id);
+    const tasks = await loadTasks();
+
+    return tasks.find((task => task.id === parsedId));
+
 }
 
 
